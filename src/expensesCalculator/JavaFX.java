@@ -11,6 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Simon
@@ -33,5 +36,39 @@ public class JavaFX extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
+    public static class test {
+        private double x = 0;
+
+        public test(double x){
+            this.x = x;
+        }
+
+        public void setX(double x){
+            this.x = x;
+        }
+
+        public double getX(){
+            return x;
+        }
+
+
+        public static void main(String[] args) {
+            List<String> stringList = new ArrayList<>(  );
+            stringList.add( "a" );
+            stringList.add( "b" );
+            stringList.add( "c" );
+
+            stringList.forEach( ausList -> System.out.println("Ausgabe: " + ausList) );
+
+
+            test test = new test(44);
+
+            System.out.println(test.getX());
+
+            test.setX( 66 );
+
+            System.out.println(test.getX());
+        }
+    }
 }
