@@ -147,9 +147,7 @@ public class CreatExcelFile extends BankPdf {
         summeDerAusgaben(workbook,sheet,list,cell, lastRowNumPreviwe,cellnumPreviwe,rowCounter,work,existingRow);
 
         try {
-
             clearExcelFile();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
