@@ -97,6 +97,7 @@ public class BankPdf {
         return listOfdate;
     }
 
+
     public void PDFreadAll(int numberOfPages, PdfReader reader) throws Exception {
         for (int i = 1; i <= numberOfPages; i++) {
             s = PdfTextExtractor.getTextFromPage( reader, i );
@@ -114,13 +115,14 @@ public class BankPdf {
             //guthaben(s);
             datum( s );
             abzuege( s );
-       /*     //Kein Datum für die positiven Beträge vorhanden
-            guthaben( s );*/
+
+            //Kein Datum für die positiven Beträge vorhanden
+            //guthaben( s );
         }
     }
 
     public static void main(String[] args) throws Exception {
-        PdfReader reader = new PdfReader("2018.pdf");
+        PdfReader reader = new PdfReader("test.pdf");
         int numberOfPages = reader.getNumberOfPages();
 
         BankPdf test = new BankPdf();

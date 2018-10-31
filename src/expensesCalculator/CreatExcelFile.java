@@ -26,6 +26,7 @@ public class CreatExcelFile extends BankPdf {
         //This data needs to be written (Object[])
         Map<Integer, Object[]> dataPool = new TreeMap<>();
         int positionInDataPool = 0;
+
         for (int i = 0; i < listOfPayment.size(); i++) {
             dataPool.put( i, new Object[]{listOfdate.get( positionInDataPool ), listOfdate.get( positionInDataPool + 1 ), listOfPayment.get( i )} );
             positionInDataPool += 2;
@@ -33,12 +34,12 @@ public class CreatExcelFile extends BankPdf {
         return dataPool;
     }
 
-    private static int summeDerAusgaben(XSSFWorkbook workbook, XSSFSheet sheet, List<Integer> list, XSSFCell cell, int lastRowNumPreviwe, int cellnumPreviwe, int rowCounter, XSSFCell work, int existingRow){
+    private static int summeDerAusgaben(XSSFWorkbook workbook, XSSFSheet sheet, List<Integer> list, XSSFCell cell, int lastRowNumPreview, int cellnumPreviwe, int rowCounter, XSSFCell work, int existingRow){
         //Beim einmaligen Monatswechsel wird an "lastRowNum" die Zahl der geschriebenen Reihen übergeben
         int lastRowNum = workbook.getSheetAt( 0 ).getPhysicalNumberOfRows();
 
         //Es kann noch in keine bereits generierte Zeile geschrieben werden
-        if(lastRowNum > lastRowNumPreviwe ){
+        if(lastRowNum > lastRowNumPreview ){
 
             //Letzter Cellenwert im Monat (und gibt den Zellenbuchstaben zurück)
             String lastCell = cell.getReference();
@@ -54,9 +55,9 @@ public class CreatExcelFile extends BankPdf {
             rowCounter++;
         }
 
-        if(lastRowNum == lastRowNumPreviwe || lastRowNum < lastRowNumPreviwe){
+        if(lastRowNum == lastRowNumPreview || lastRowNum < lastRowNumPreview){
 
-            //Letztes Cellenwert im Monat (und gibt den Zellenbuchstaben zurück)
+            //Letzter Cellenwert im Monat (und gibt den Zellenbuchstaben zurück)
             String lastCell = work.getReference();
             String firstCell = lastCell.split("\\d+")[0] + "1";
 
@@ -79,7 +80,7 @@ public class CreatExcelFile extends BankPdf {
         int lastRowNum = 0;
         int cellJump = 0;
         int cellnumPreviwe = 0;
-        int lastRowNumPreviwe = 0;
+        int lastRowNumPreview = 0;
 
         //KeySet
         Set<Integer> keyset = putToDataPool().keySet();
@@ -99,8 +100,8 @@ public class CreatExcelFile extends BankPdf {
 
             //Prüft ob ein Monatswechsel stattgefunden hat und übergibt die Anzahl der bereits geschriebenen Reihen (row's)
             if ((!month.equals( nextMonth ) && !nextMonth.equals( "" ))) {
-                lastRowNum = summeDerAusgaben( workbook, sheet, list, cell, lastRowNumPreviwe, cellnumPreviwe, rowCounter, work, existingRow );
-                lastRowNumPreviwe = lastRowNum;
+                lastRowNum = summeDerAusgaben( workbook, sheet, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow );
+                lastRowNumPreview = lastRowNum;
                 //In der gleichen Reihe jeweils um 4 Stellen nach rechts springen
                 cellJump += 4;
                 existingRow = 0;
@@ -144,8 +145,7 @@ public class CreatExcelFile extends BankPdf {
         }
 
         //Zur Berechnung der letzten Summe wenn alle Monate durchlaufen sind
-        summeDerAusgaben(workbook,sheet,list,cell, lastRowNumPreviwe,cellnumPreviwe,rowCounter,work,existingRow);
-
+        summeDerAusgaben(workbook, sheet, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow);
         try {
             clearExcelFile();
         } catch (Exception e) {
@@ -154,7 +154,6 @@ public class CreatExcelFile extends BankPdf {
     }
 
     private static void clearExcelFile() throws IOException {
-
         File file;
         if (( file = new File( "howtodoinjava_demo.xlsx" )).exists()) {
             delete( file.toPath() );
