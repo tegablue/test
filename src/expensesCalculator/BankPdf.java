@@ -122,7 +122,7 @@ public class BankPdf {
     }
 
     public static void main(String[] args) throws Exception {
-        PdfReader reader = new PdfReader("test.pdf");
+        PdfReader reader = new PdfReader("2018.pdf");
         int numberOfPages = reader.getNumberOfPages();
 
         BankPdf test = new BankPdf();

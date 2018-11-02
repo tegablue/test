@@ -34,7 +34,7 @@ public class CreatExcelFile extends BankPdf {
         return dataPool;
     }
 
-    private static int summeDerAusgaben(XSSFWorkbook workbook, XSSFSheet sheet, List<Integer> list, XSSFCell cell, int lastRowNumPreview, int cellnumPreviwe, int rowCounter, XSSFCell work, int existingRow){
+    private static int summeDerAusgaben(XSSFWorkbook workbook, List<Integer> list, XSSFCell cell, int lastRowNumPreview, int cellnumPreviwe, int rowCounter, XSSFCell work, int existingRow){
         //Beim einmaligen Monatswechsel wird an "lastRowNum" die Zahl der geschriebenen Reihen übergeben
         int lastRowNum = workbook.getSheetAt( 0 ).getPhysicalNumberOfRows();
 
@@ -46,7 +46,7 @@ public class CreatExcelFile extends BankPdf {
             String firstCell = lastCell.split("\\d+")[0] + "1";
 
             //Kreiert Row für die zu berechnende Summe
-            sheet.createRow( rowCounter ).createCell( cellnumPreviwe ).setCellFormula( "SUM(" + lastCell + ":" + firstCell + ")" );
+            workbook.getSheetAt( 0 ).createRow( rowCounter ).createCell( cellnumPreviwe ).setCellFormula( "SUM(" + firstCell + ":" + lastCell + ")" );
             list.add( rowCounter );
 
             //Da noch eine Row für die Summe kreiert wurde
@@ -100,7 +100,7 @@ public class CreatExcelFile extends BankPdf {
 
             //Prüft ob ein Monatswechsel stattgefunden hat und übergibt die Anzahl der bereits geschriebenen Reihen (row's)
             if ((!month.equals( nextMonth ) && !nextMonth.equals( "" ))) {
-                lastRowNum = summeDerAusgaben( workbook, sheet, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow );
+                lastRowNum = summeDerAusgaben( workbook, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow );
                 lastRowNumPreview = lastRowNum;
                 //In der gleichen Reihe jeweils um 4 Stellen nach rechts springen
                 cellJump += 4;
@@ -122,6 +122,7 @@ public class CreatExcelFile extends BankPdf {
                     else if (obj instanceof Double)
                         cell.setCellValue( (Double) obj );
                 }
+
                 rowCounter++;
             }
 
@@ -145,7 +146,7 @@ public class CreatExcelFile extends BankPdf {
         }
 
         //Zur Berechnung der letzten Summe wenn alle Monate durchlaufen sind
-        summeDerAusgaben(workbook, sheet, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow);
+        summeDerAusgaben(workbook, list, cell, lastRowNumPreview, cellnumPreviwe, rowCounter, work, existingRow);
         try {
             clearExcelFile();
         } catch (Exception e) {
